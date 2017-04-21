@@ -42,10 +42,10 @@ function update () {
       state.cat.xvel + (state.cat.contact ? 4 : 3),
       12
     );
-  } 
+  }
   if (keyboard.keys['ArrowLeft'].down) {
     state.cat.xvel = Math.max(
-      state.cat.xvel - (state.cat.contact ? 4 : 3), 
+      state.cat.xvel - (state.cat.contact ? 4 : 3),
       -12
     );
   }
@@ -61,6 +61,22 @@ function update () {
   } else {
     state.cat.jumpAvailable = 0;
   }
+
+  // Collision Detection
+  state.level.platforms.forEach(function (platform) {
+    var xOverlap = state.cat.x >= platform.x &&
+    state.cat.x <= (platform.x + platform.width);
+
+    var yCrossing =
+      state.cat.y <= platform.y &&
+      state.cat.y + state.cat.yvel >= platform.y
+
+    if (xOverlap && yCrossing) {
+      state.cat.y = platform.y;
+      state.cat.yvel = 0;
+      state.cat.contact = true;
+    }
+  });
 
   // Don't need to save or return anything because state is global
   return;
